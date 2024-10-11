@@ -1,0 +1,26 @@
+{
+  "name": "com.cole-games.basic-architecture",
+  "version": "1.0.0",
+  "displayName": "cole's Basic Architecture'",
+  "description": "This is an basic architecture for mobile based game development.",
+  "unity": "2022.3",
+  "unityRelease": "0b5",
+  "documentationUrl": "https://github.com/coleyoung-game/basic_architectrue/Readme.md",
+  //"changelogUrl": "https://example.com/changelog.html",
+  //"licensesUrl": "https://example.com/licensing.html",
+  "dependencies": {
+    "com.unity.addressables": "1.21.21",
+    "com.unity.render-pipelines.universal": "14.0.9",
+    "com.unity.mobile.android-logcat": "1.3.2"
+  },
+  "keywords": [
+    "keyword1",
+    "keyword2",
+    "keyword3"
+  ],
+  "author": {
+    "name": "coleyoung-game",
+    "email": "ighong11@gmail.com",
+    "url": "https://github.com/coleyoung-game"
+  }
+}
