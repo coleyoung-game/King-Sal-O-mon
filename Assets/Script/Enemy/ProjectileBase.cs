@@ -8,7 +8,8 @@ public class ProjectileBase : MonoBehaviour
     public GameObject player;         // 플레이어 오브젝트
     protected Rigidbody2D rb;          // Rigidbody2D 컴포넌트 (protected로 변경)
 
-    protected virtual void Start() // 가상 함수로 변경 (자식 클래스에서 재정의 가능)
+
+    protected virtual void OnEnable() // Start() 대신 OnEnable() 사용
     {
         rb = GetComponent<Rigidbody2D>();
         rb.velocity = Vector3.zero;
@@ -16,10 +17,8 @@ public class ProjectileBase : MonoBehaviour
         if (player == null)
             player = GameObject.Find("Salmon");
 
-        // 자식 클래스에서 초기 속도 설정
         SetInitialVelocity();
 
-        // lifetime 이후에 비활성화하는 코루틴 시작
         StartCoroutine(DisableAfterLifetime());
     }
 
@@ -39,14 +38,27 @@ public class ProjectileBase : MonoBehaviour
         rb.velocity = direction * speed;
     }
 
-    protected virtual void OnTriggerEnter2D(Collider2D other)
+    /*
+   protected virtual void OnTriggerEnter2D(Collider2D other)
+   {
+       if (other.CompareTag("Player"))
+       {
+           Debug.Log("플레이어에게 히트!");
+           // 플레이어에게 데미지를 주는 등의 로직 추가
+
+           // 풀에 탄환 반환
+           ProjectilePool.Instance.ReturnProjectile(gameObject);
+       }
+   }
+    */
+
+    protected virtual void OnCollisionEnter2D(Collision2D collision) // Collision2D 타입 사용
     {
-        if (other.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
             Debug.Log("플레이어에게 히트!");
             // 플레이어에게 데미지를 주는 등의 로직 추가
 
-            // 풀에 탄환 반환
             ProjectilePool.Instance.ReturnProjectile(gameObject);
         }
     }

@@ -21,11 +21,6 @@ public class Enemy : MonoBehaviour
 
         // 풀 생성
         ProjectilePool.Instance.CreatePool(ProjectilePrefab, poolSize);
-        /*
-         * 
-에너미 스크립트에서 투사체 풀을 만드는데, 에너미가 여러 개 있을 경우에 풀이 너무 많이 생길 수 있기 때문에 최적화에 문제가 있는지 확인해볼 것
-         */
-
         StartCoroutine(ShootProjectile());
     }
 
