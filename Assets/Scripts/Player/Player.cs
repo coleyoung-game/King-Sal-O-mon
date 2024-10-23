@@ -120,5 +120,18 @@ public class Player : MonoBehaviour
         attackCollider.enabled = true; // 공격 Collider 활성화
         yield return new WaitForSeconds(attackDuration); // 지속 시간 동안 대기
         attackCollider.enabled = false; // 공격 Collider 비활성화
+
+        // 공격 범위 내의 적에게 데미지 적용
+        Collider2D[] hitEnemies = new Collider2D[10]; // 임시, 최대 10개의 적까지 충돌 감지 
+        int numEnemiesHit = Physics2D.OverlapCollider(attackCollider, new ContactFilter2D(), hitEnemies); // 충돌 결과 저장
+
+        for (int i = 0; i < numEnemiesHit; i++)
+        {
+            EnemyHealth enemyHealth = hitEnemies[i].GetComponent<EnemyHealth>();
+            if (enemyHealth != null)
+            {
+                enemyHealth.TakeDamage(20f); // 임시, 20 데미지 적용
+            }
+        }
     }
 }

@@ -24,6 +24,18 @@ public class Enemy : MonoBehaviour
         StartCoroutine(ShootProjectile());
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Tail")) // 플레이어 공격 Collider와 충돌
+        {
+            EnemyHealth enemyHealth = GetComponent<EnemyHealth>();
+            if (enemyHealth != null)
+            {
+                enemyHealth.TakeDamage(20f); // 예시: 20 데미지 적용
+            }
+        }
+    }
+
     // 투사체 발사 코루틴
     IEnumerator ShootProjectile()
     {
