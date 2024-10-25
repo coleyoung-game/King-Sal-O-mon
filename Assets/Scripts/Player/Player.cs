@@ -56,23 +56,24 @@ public class Player : MonoBehaviour
         Vector2 dir = new Vector2(joystick.Horizontal, joystick.Vertical);
         Vector2 rotationDir = dir;
 
-        // Top 또는 Bottom에 닿으면 X축 속도 감소 및 특정 방향 움직임만 허용
-        if (isTouchingTop && rb.velocity.y > 0.1f)
-        //if (isTouchingTop && dir.y > 0f)
+        // 캐릭터가 움직이고 있을 때만 배경 스크롤
+        if (rb.velocity.magnitude > 0.1f)  // 속도 크기가 0.1f보다 클 때
         {
-            dir.y = 0f;
-            dir.x *= 0.5f;
+            // 캐릭터의 위쪽 방향 벡터 계산
+            Vector2 upDirection = transform.up;
 
-            MoveBackground(Vector2.down);
+            // 캐릭터가 북쪽 180도 반원을 바라보는 경우
+            if (Vector2.Dot(upDirection, Vector2.up) > 0)
+            {
+                MoveBackground(Vector2.down); // 아래로 스크롤
+            }
+            // 캐릭터가 남쪽 180도 반원을 바라보는 경우
+            else
+            {
+                MoveBackground(Vector2.up); // 위로 스크롤
+            }
         }
-        else if (isTouchingBottom && rb.velocity.y < -0.1f)
-        //else if (isTouchingBottom && dir.y < 0f)
-        {
-            dir.y = 0f;
-            dir.x *= 0.5f;
 
-            MoveBackground(Vector2.up);
-        }
 
         // 가속도 적용
         if (dir.magnitude > 0.1f) // 조이스틱 입력이 있을 때
@@ -130,18 +131,36 @@ public class Player : MonoBehaviour
         }
     }
 
-    // 플레이어가 화면 좌우 경계를 넘지 않도록 위치 제한
+    // 플레이어가 화면 경계를 넘지 않도록 위치 제한
     private void ClampPlayerPosition()
     {
+        // 화면 높이 계산
+        float screenHeight = Camera.main.orthographicSize * 2.0f;
+
         Vector3 newPosition = transform.position;
+
+        // 좌우 경계 제한
         newPosition.x = Mathf.Clamp(newPosition.x, -screenWidth / 2 + boundaryPadding, screenWidth / 2 - boundaryPadding);
+
+        // 상하 경계 제한
+        newPosition.y = Mathf.Clamp(newPosition.y, -screenHeight / 2 + boundaryPadding, screenHeight / 2 + boundaryPadding); // + screenHeight / 2 추가
+
         transform.position = newPosition;
     }
 
     // 배경 움직임 함수 
     private void MoveBackground(Vector2 direction)
     {
-        background.transform.Translate(direction * playerMoveSpeed * Time.deltaTime);
+        // 캐릭터의 위쪽 방향 벡터 계산
+        Vector2 upDirection = transform.up;
+
+        // 북쪽/남쪽 방향과의 정렬 정도 계산 (0 ~ 1)
+        float alignment = Mathf.Abs(Vector2.Dot(upDirection, Vector2.up));
+
+        // 정렬 정도에 따라 배경 스크롤 속도 조절
+        float scrollSpeed = playerMoveSpeed * alignment;
+
+        background.transform.Translate(direction * scrollSpeed * Time.deltaTime);
     }
 
     // 공격 코루틴
