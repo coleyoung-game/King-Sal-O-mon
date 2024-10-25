@@ -4,15 +4,13 @@ using UnityEngine.UI;
 
 public class Joystick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointerDownHandler
 {
-    private Canvas canvas;
+    private Canvas canvas; // UI 캔버스 참조
     public RectTransform frame;
     public RectTransform handle;
 
     private float handleRange = 130;
     private Vector3 input;
     private Vector2 initialTouchPos;
-    private Vector2 touchPosition;
-    private Touch touch;
 
     public float Horizontal { get { return input.x; } }
     public float Vertical { get { return input.y; } }
@@ -25,20 +23,22 @@ public class Joystick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointer
     }
     void Update()
     {
+        /*
         // 마우스 왼쪽 버튼 클릭
         if (Input.GetMouseButtonDown(0))
         {
-            touchPosition = Input.mousePosition;
-            //SetJoystickPosition(touchPosition);
+            Vector2 mousePosition = Input.mousePosition;
+            SetJoystickPosition(mousePosition);
         }
 
         // 터치 입력
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            touchPosition = touch.position;
-            //SetJoystickPosition(touchPosition);
+            Vector2 touchPosition = touch.position;
+            SetJoystickPosition(touchPosition);
         }
+      */
     }
 
     private void SetJoystickPosition(Vector2 screenPosition)
@@ -51,11 +51,13 @@ public class Joystick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointer
             out Vector2 canvasPosition
         );
 
+        // 조이스틱 위치 설정
         transform.localPosition = canvasPosition;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
+        Debug.Log("2");
         Vector2 localVector = GetInputPosition(eventData) - initialTouchPos;
 
         if (localVector.magnitude < handleRange)
@@ -68,22 +70,18 @@ public class Joystick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointer
         }
 
         input = localVector;
-        SetJoystickColor(true);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
         input = Vector2.zero;
         handle.localPosition = Vector2.zero;
-        SetJoystickColor(false);
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        Debug.Log("1");
         initialTouchPos = GetInputPosition(eventData);
-
-        SetJoystickPosition(touchPosition);
-        frame.localPosition = initialTouchPos;
         handle.localPosition = Vector2.zero;
         OnDrag(eventData);
     }
@@ -93,25 +91,5 @@ public class Joystick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointer
         Vector2 localPoint;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(frame, eventData.position, eventData.pressEventCamera, out localPoint);
         return localPoint;
-    }
-
-    private void SetJoystickColor(bool isOnDraged)
-    {
-        Color pointedFrameColor;
-        Color pointedHandleColor;
-
-        if (isOnDraged)
-        {
-            pointedFrameColor = new Color(1, 0, 0, 0.5f);
-            pointedHandleColor = new Color(1, 0, 0, 0.6f);
-        }
-        else
-        {
-            pointedFrameColor = new Color(1, 1, 1, 0.5f);
-            pointedHandleColor = new Color(1, 1, 1, 0.6f);
-        }
-
-        this.frame.gameObject.GetComponent<Image>().color = pointedFrameColor;
-        this.handle.gameObject.GetComponent<Image>().color = pointedHandleColor;
     }
 }

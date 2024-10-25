@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class Player : MonoBehaviour
 {
     public float playerMoveSpeed = 0.2f;
-    //private Joystick joystick;
-    private FloatingJoystick joystick;
+    private Joystick joystick;
+    //private FloatingJoystick joystick;
     private Rigidbody2D rb;
 
     private float screenWidth;
@@ -31,8 +32,8 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-//        joystick = FindObjectOfType<Joystick>();
-        joystick = FindObjectOfType<FloatingJoystick>();
+        joystick = FindObjectOfType<Joystick>();
+//joystick = FindObjectOfType<FloatingJoystick>();
         rb = GetComponent<Rigidbody2D>();
 
         if (rb == null)
