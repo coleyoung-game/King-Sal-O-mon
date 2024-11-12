@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class Player : MonoBehaviour
@@ -30,6 +31,8 @@ public class Player : MonoBehaviour
     public Collider2D attackCollider; // 공격에 사용할 Collider
     public float attackDuration = 0.2f; // 공격 지속 시간
 
+    public PlayerHealth playerHealth;  // PlayerHealth 참조 추가
+
     void Start()
     {
         joystick = FindObjectOfType<Joystick>();
@@ -49,6 +52,7 @@ public class Player : MonoBehaviour
 
         // 공격 Collider 초기 비활성화
         attackCollider.enabled = false;
+
     }
 
     void Update()
